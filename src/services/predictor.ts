@@ -57,7 +57,7 @@ export const predict = (data: DataPoint[], params?: AlgorithmParam[]) => {
 
     const prevLevel = level;
     level = alpha * item.value + (1 - alpha) * guess;
-    trend = beta * (level - prevLevel) + (1 - beta) * trend;
+    trend = beta * (level - prevLevel) + (1 - beta) * phi * trend;
   }
 
   const lastDate = data[data.length - 1].timestamp;

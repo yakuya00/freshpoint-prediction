@@ -78,18 +78,19 @@ Důvod výběru: metoda zachycuje směr růstu, na rozdíl od regrese se průbě
 
 ## 4. Vyhodnocení a validace
 
-Kvalita zvoleného modelu byla ověřena pomocí zpětného testování (backtestingu) na historických datech ze souboru `weekly-sales.json`:
+Kvalita modelu byla ověřena zpětným testováním (backtestingem) na dodaných historických datech.
 
-- **Metodika:** Z časové řady bylo vyjmuto posledních 10 týdnů jako testovací sada (ground truth). Model byl natrénován na předchozím období s nastavením parametrů `alpha = 0.9`, `beta = 0.8` a `phi = 0.88`, přičemž následně predikoval hodnoty pro těchto skrytých 10 týdnů.
-- **Metrika:** Pro vyhodnocení byla použita relativní chyba **MAPE** (Mean Absolute Percentage Error).
-- **Výsledek:** Dosažená hodnota MAPE na tomto testovacím vzorku činí **4.67 %**.
+- **Metodika:** Posledních 10 týdnů řady bylo vyjmuto jako testovací sada. Model byl natrénován na předchozím období a predikoval těchto 10 skrytých týdnů.
+- **Metrika:** MAPE (Mean Absolute Percentage Error).
+- **Výchozí parametry:** `alpha = 0.9`, `beta = 0.8`, `phi = 0.88`. Hodnoty jsem zvolil na základě výsledku na posledních 10 týdnech.
+- **Výsledek:** MAPE na tomto testovacím vzorku je **4.67 %**.
 
-### Poznámka k výsledku a produkčnímu nasazení:
+### Omezení tohoto vyhodnocení
 
-Výsledek 4.67 % indikuje velmi stabilní zachycení trendu na testovaném úseku. Je však nutné počítat s tím, že v reálném dlouhodobém provozu bude odchylka vlivem nepředvídatelných faktorů (svátky, výkyvy počasí, lokální anomálie poptávky) pravděpodobně vyšší.
+Výsledek 4.67 % platí pro jedno konkrétní okno (posledních 10 týdnů) a pro parametry laděné právě na něm. Neověřoval jsem ho na dalších oknech. Při jiných parametrech nebo na delším úseku historie se výsledek může výrazně změnit, protože agresivní nastavení (vysoké alpha a beta) rychle reaguje na poslední týdny, ale je citlivé na výkyvy (svátky, anomálie poptávky).
 
 ## 5. Známá omezení
 
 - **Výjimečné týdny nejsou ošetřeny.** Vánoce, Velikonoce, jaro 2020 (COVID) a jednotlivé výpadky ovlivňují odhady úrovně a trendu.
-- **Sezónnost není modelována**
+- **Sezónnost není modelována**.
 - **Ukládání je v paměti.** Po restartu serveru `GET /prediction` nevrací nic, dokud neproběhne nové volání `/predict`.
